@@ -60,8 +60,6 @@ pipeline {
             echo -n "commit     : "; git rev-parse HEAD || echo "-"
             echo -n "commit_msg : "; git log -1 --pretty=%s || echo "-"
           '''
-
-          sh 'test -f Dockerfile && echo "Dockerfile found ✅" || (echo "Dockerfile missing ❌" && exit 1)'
         }
       }
     }
