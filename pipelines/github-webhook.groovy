@@ -15,7 +15,11 @@ pipeline {
           def branchMap = [dev:'dev', sit:'sit', uat:'uat', main:'main']
           env.APP_BRANCH = branchMap[env.DEPLOY_ENV] ?: 'dev'
 
-          echo "DEPLOY_ENV=${env.DEPLOY_ENV} APP_BRANCH=${env.APP_BRANCH}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎯 ENV RESOLUTION"
+          echo "DEPLOY_ENV      = ${env.DEPLOY_ENV}"
+          echo "APP_BRANCH      = ${env.APP_BRANCH}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         }
       }
     }
@@ -26,23 +30,16 @@ pipeline {
           branches: [[name: "*/${env.APP_BRANCH}"]],
           userRemoteConfigs: [[url: env.APP_REPO]]
         ])
-      }
-    }
 
-    stage('Resolve env') {
-      steps {
-        script {
-          env.DEPLOY_ENV = env.JOB_NAME.tokenize('/').last()
-
-          def branchMap = [dev:'dev', sit:'sit', uat:'uat', main:'main']
-          env.APP_BRANCH = branchMap[env.DEPLOY_ENV] ?: 'dev'
-
+        sh '''
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "🎯 ENV RESOLUTION"
-          echo "DEPLOY_ENV      = ${env.DEPLOY_ENV}"
-          echo "APP_BRANCH      = ${env.APP_BRANCH}"
+          echo "📦 GIT CHECKOUT RESULT"
+          git remote -v
+          git rev-parse --abbrev-ref HEAD
+          git rev-parse HEAD
+          git log -1 --pretty=%B
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-        }
+        '''
       }
     }
   }
