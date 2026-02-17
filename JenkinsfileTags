@@ -1,0 +1,11 @@
+stage('Detect Ref Type') {
+  steps {
+    script {
+      if (env.TAG_NAME) {
+        echo "🚀 Building TAG: ${env.TAG_NAME}"
+      } else {
+        echo "🌿 Building BRANCH: ${env.BRANCH_NAME}"
+      }
+    }
+  }
+}
